@@ -1,0 +1,17 @@
+﻿@using EnumsNET;
+@using HackGuide.Entities.Guide;
+
+
+<h2>CreateYourVita</h2>
+
+<select>
+    @foreach (var hws in Enum.GetValues<GuideEnums.Hardware>())
+    {
+        <option value="@hws">@hws.AsString(EnumFormat.Description)</option>
+    }
+</select>
+
+@code { 
+    [Parameter]
+    public GuideEnums.Hardware VitaHardware { get; set; }
+}

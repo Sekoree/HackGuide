@@ -1,0 +1,106 @@
+﻿@inject HackGuide.PsnUtil.PsnClient psnClient;
+@{
+    ViewData["Title"] = "Quick Links";
+    HackGuide.PsnUtil.Entities.UserInfoResponse userInfo = ViewData["UserInfo"] as HackGuide.PsnUtil.Entities.UserInfoResponse;
+}
+
+<h2>Generate Essentials as QCMA Backups</h2>
+
+@if (this.ViewData["UserInfo"] == null)
+{
+
+    <p>
+        <span>First your account ID (AID) is needed</span>
+        <br />
+        <span>For that you have to log into PSN, so do the following:</span>
+    </p>
+    <p>
+        <span><i>If you already know the AID just put that in the textbox and click the button</i></span>
+        <br />
+        <span> - Click <b><a href="@psnClient.GetLoginURL()" target="_blank">this</a></b> and login with the same PSN account you use on you PS Vita/TV</span>
+        <br />
+        <span> - Once you see "<b>redirect</b>" copy the link from the addressbar of your browser and paste it here into the URL box</span>
+        <br />
+        <span> - Then press "Get AID!"</span>
+        <br />
+        <img src="~/getlink.gif" height="250" />
+    </p>
+    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="QuickLinks">
+        <table style="border-spacing: 5px; border-collapse: separate;">
+            <tr>
+                <td>URL (or AID): </td>
+                <td><input type="text" name="codeURL" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Get AID!" /></td>
+            </tr>
+        </table>
+        <br />
+    </form>
+}
+else
+{
+    <p>Hello @userInfo.OnlineId</p>
+    <form method="post" enctype="multipart/form-data" asp-controller="Home" asp-action="ApiRedirect">
+        <table style="border-spacing: 5px; border-collapse: separate;">
+            <tr>
+                <td>Homebrew Pack: </td>
+                <td>
+                    <select name="pack">
+                        <option selected value="full">
+                            Hencore², Vitashell and VitaDeploy
+                        </option>
+                        <option value="h2">
+                            Hencore²
+                        </option>
+                        <option value="vs">
+                            Vitashell
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Your AID: </td>
+                <td><input type="text" name="aid" readonly value="@ViewData["AID"]" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Generate!" /></td>
+            </tr>
+        </table>
+        <br />
+    </form>
+    <p><b>How to use the generated .zip file</b></p>
+    <p>
+        <span>
+            Extract the "@ViewData["AID"]" folder from the zip and merge it with the one in your APP backups folder (if you dont have one, 
+            either create it so it looks like the structure on the defaults shown below or copy something from the Vita/PS TV to your PC with QCMA)
+        </span>
+        <br />
+        <span>
+            Default QCMA backups locations:
+        </span>
+        <br />
+        <span>
+            Windows: <code>Documents\PS Vita\APP\@ViewData["AID"]</code>
+        </span>
+        <br />
+        <span>
+            macOS: <code>"Home"/PS Vita/APP/@ViewData["AID"]</code>
+        </span>
+        <br />
+        <span>
+            Linux: <code>/home/yourUsername/PS Vita/APP/@ViewData["AID"]</code>
+        </span>
+        <br />
+        <br />
+        <span>
+            So the folder that the backups (PCSG90096, SKGD3PL0Y and/or VITASHELL) should be in is <code>PS VITA/APP/@ViewData["AID"]/</code>
+        </span>
+        <br />
+        <span>
+            After that either restart QCMA or rightlick it in your notification try and "Update Database" then the new backups hould show up
+        </span>
+    </p>
+}
